@@ -1,5 +1,6 @@
 var synaptic = require('synaptic');
 var fs = require('fs');
+var util = require('util');
 var Neuron = synaptic.Neuron,
 	Layer = synaptic.Layer,
 	Network = synaptic.Network,
@@ -56,27 +57,32 @@ fs.readFile(__dirname + '/data/train.csv', function (err, trainContent) {
         console.log('Error:', err);
     }
 
+    console.log(util.inspect(process.memoryUsage()));
     var trainData = convertTrainingData(trainContent);
-    var trainSample = trainData.slice(0, 20);
+    var trainSample = trainData.slice(0, 2000);
+    console.log(util.inspect(process.memoryUsage()));
 
     console.log('Got ' + trainData.length + ' samples');
     var myICR = new ICR(784, 200, 1);
     var myTrainer = new Trainer(myICR);
-    //console.log(myTrainer);
+    console.log(myTrainer);
     
     time = new Date();
     myTrainer.train(trainSample, {
     	iterations: 20,
+        shuffle: true,
     	log: 5,
     	schedule: {
 		    every: 5, // repeat this task every 20 iterations
 		    do: function(data) {
 		        console.log(data);
+                console.log(util.inspect(process.memoryUsage()));
 		    }
 		}
     });
     var trainingTime = new Date() - time;
     console.log('Training time: ' + trainingTime);
+    saveNetwork(myICR);
     
     /*myTrainer.train(trainSample, {
     	rate: .1,
