@@ -1,0 +1,20 @@
+{
+  "name": "node_neural_network",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "dependencies": {
+    "brain": "^0.7.0",
+    "cli-chart": "^0.3.1",
+    "synaptic": "^1.0.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VictorLarssen/node_neural_network.git"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/VictorLarssen/node_neural_network/issues"
+  },
+  "homepage": "https://github.com/VictorLarssen/node_neural_network#readme"
+}
