@@ -2,11 +2,11 @@ var brain = require('brain');
 var fs = require('fs');
 var util = require('util');
 
-//Training settings
-var _samples = 2000;
-var _iterations = 50;
-var _error = 0.002;
-
+// Training settings
+var _samples = 60000;
+var _iterations = 2000;
+var _error = 0.0003;
+var _learningRate = 0.4;
 
 function convertTrainingData(data)
 {
@@ -52,7 +52,7 @@ fs.readFile(__dirname + '/data/train.csv', function (err, trainContent) {
     	errorThresh: _error,
     	iterations: _iterations,
         callbackPeriod: 1,
-    	learningRate: 0.2,
+    	learningRate: _learningRate,
         callback: function(result){
             console.log('[TRAINER] Iteration '+result.iterations+' finished. Error-rate is '+result.error+'.');
         }
