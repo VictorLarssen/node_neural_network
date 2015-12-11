@@ -1,6 +1,16 @@
 var brain = require('brain');
 var fs = require('fs');
 var util = require('util');
+var cliChart = require('cli-chart');
+var chart = new cliChart({
+    xlabel: 'Iterations',
+    ylabel: 'Error-rate',
+    direction: 'y',
+    width: 80,
+    height: 20,
+    lmargin: 15,
+    step: 2
+});
 
 // Training settings
 var _samples = 60000;
@@ -54,6 +64,9 @@ fs.readFile(__dirname + '/data/train.csv', function (err, trainContent) {
         callbackPeriod: 1,
     	learningRate: _learningRate,
         callback: function(result){
+            console.log('\033[2J');
+            chart.addBar(result.error);
+            chart.draw();
             console.log('[TRAINER] Iteration '+result.iterations+' finished. Error-rate is '+result.error+'.');
         }
     });
