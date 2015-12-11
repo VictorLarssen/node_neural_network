@@ -4,3 +4,4 @@ data/train-images.idx3-ubyte
 data/train.csv
 
 data/mnist_test.csv
+node_modules/
