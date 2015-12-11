@@ -3,7 +3,7 @@ var fs = require('fs');
 var util = require('util');
 
 //Training settings
-var _samples = 200;
+var _samples = 2000;
 var _iterations = 50;
 var _error = 0.002;
 
