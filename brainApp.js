@@ -10,10 +10,10 @@ function convertTrainingData(data)
 	time = new Date();
 	for(var i = 0; i < lines.length; i++) {
 		var input = lines[i].split(',').map(function(value) {
-			return parseInt(value);
+			return parseInt(value) / 255;
 		});
 		var output = Array.apply(null, Array(10)).map(Number.prototype.valueOf, 0);
-		output[input.shift()] = 1;
+		output[input.shift() * 255] = 1;
 		convertedData.push({
 			input: input, 
 			output: output
@@ -31,9 +31,8 @@ fs.readFile(__dirname + '/data/train.csv', function (err, trainContent) {
 
     console.log(util.inspect(process.memoryUsage()));
     var trainData = convertTrainingData(trainContent);
-    var trainSample = trainData.slice(0, 10000);
+    var trainSample = trainData.slice(0, 2000);
     console.log(util.inspect(process.memoryUsage()));
-
     console.log('Got ' + trainData.length + ' samples');
     var myICR = new brain.NeuralNetwork({
     	hiddenLayers: [392, 196]
@@ -41,6 +40,7 @@ fs.readFile(__dirname + '/data/train.csv', function (err, trainContent) {
     
     time = new Date();
     myICR.train(trainSample, {
+    	errorThresh: 0.01,
     	iterations: 50,
     	log: true,
     	logPeriod: 1,
