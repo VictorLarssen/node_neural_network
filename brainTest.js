@@ -1,7 +1,7 @@
 var brain = require('brain');
 var fs = require('fs');
 var util = require('util');
-
+var samples = 9999;
 
 function convertTrainingData(data)
 {
@@ -15,7 +15,7 @@ function convertTrainingData(data)
 		var output = Array.apply(null, Array(10)).map(Number.prototype.valueOf, 0);
 		output[input.shift() * 255] = 1;
 		convertedData.push({
-			input: input, 
+			input: input,
 			output: output
 		});
 	}
@@ -24,14 +24,14 @@ function convertTrainingData(data)
 	return convertedData;
 }
 
-fs.readFile(__dirname + '/data/test.csv', function (err, testContent) {  
+fs.readFile(__dirname + '/data/test.csv', function (err, testContent) {
     if (err) {
         console.log('Error:', err);
     }
 
     console.log(util.inspect(process.memoryUsage()));
     var testData = convertTrainingData(testContent);
-    var testSample = testData.slice(0, 20);
+    var testSample = testData;
     console.log(util.inspect(process.memoryUsage()));
 
     console.log('Got ' + testData.length + ' samples');
@@ -43,16 +43,23 @@ fs.readFile(__dirname + '/data/test.csv', function (err, testContent) {
     	network = JSON.parse(network);
 
     	myICR.fromJSON(network);
+			var numRight = 0;
+
     	for (var i = 0; i < testSample.length; i++) {
     	var resultArr = myICR.run(testSample[i].input);
     	var result = resultArr.indexOf(Math.max.apply(Math, resultArr));
 		var actual = testSample[i].output.indexOf(Math.max.apply(Math, testSample[i].output));
 
 		var str = '(' + i + ') GOT: ' + result + ', ACTUAL: ' + actual;
-		
+
+		numRight += result === actual ? 1 : 0;
+
 
 		console.log(str);
     }
+
+		console.log('Got', numRight, 'out of '+ samples + ', or ' + String(100*(numRight/samples)) + '%');
+
     });
 
 });

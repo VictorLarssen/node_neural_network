@@ -2,6 +2,11 @@ var brain = require('brain');
 var fs = require('fs');
 var util = require('util');
 
+//Training settings
+var _samples = 60000;
+var _iterations = 50;
+var _error = 0.002;
+
 
 function convertTrainingData(data)
 {
@@ -15,7 +20,7 @@ function convertTrainingData(data)
 		var output = Array.apply(null, Array(10)).map(Number.prototype.valueOf, 0);
 		output[input.shift() * 255] = 1;
 		convertedData.push({
-			input: input, 
+			input: input,
 			output: output
 		});
 	}
@@ -24,33 +29,33 @@ function convertTrainingData(data)
 	return convertedData;
 }
 
-fs.readFile(__dirname + '/data/train.csv', function (err, trainContent) {  
+fs.readFile(__dirname + '/data/train.csv', function (err, trainContent) {
     if (err) {
         console.log('Error:', err);
     }
 
     console.log(util.inspect(process.memoryUsage()));
     var trainData = convertTrainingData(trainContent);
-    var trainSample = trainData.slice(0, 2000);
+    var trainSample = trainData.slice(0, samples);
     console.log(util.inspect(process.memoryUsage()));
     console.log('Got ' + trainData.length + ' samples');
     var myICR = new brain.NeuralNetwork({
     	hiddenLayers: [392, 196]
     })
-    
+
     time = new Date();
     myICR.train(trainSample, {
-    	errorThresh: 0.01,
-    	iterations: 50,
+    	errorThresh: _error,
+    	iterations: _iterations,
     	log: true,
     	logPeriod: 1,
     	learningRate: 0.2
     });
-    
+
     var trainingTime = new Date() - time;
     console.log('Training time: ' + trainingTime);
     saveNetwork(myICR);
-	
+
 });
 
 function saveNetwork(network) {
