@@ -16,7 +16,7 @@ function convertTrainingData(data)
         for (var j = 0; j < input.length; j++) {
             actualInput.push(parseInt(input[j]) / 255);
         };
-        
+
         var output = Array.apply(null, Array(10)).map(Number.prototype.valueOf, 0);
         output[actualInput.shift() * 255] = 1;
         convertedData.push({
@@ -55,12 +55,20 @@ fs.readFile(__dirname + '/data/test.csv', function (err, testContent) {
 	    	var resultArr = myICR.run(testSample[i].input);
 	    	var result = resultArr.indexOf(Math.max.apply(Math, resultArr));
 			var actual = testSample[i].output.indexOf(Math.max.apply(Math, testSample[i].output));
-			
+      var prob = Math.round(resultArr[result] * 100);
+
+      if (result !== actual){
+        var str = '(' + i + ') GOT: ' + result + ', ACTUAL: ' + actual + ', Precision: ' + prob;
+        console.log(str);
+      }
+
 			numRight += result === actual ? 1 : 0;
+
+
 	    }
 		console.log('[TESTER] Finished testing.\n\n'
-			+'SUCCEEDED: '+ numRight 
-			+'\nFAILED:    '+ (samples-numRight) 
+			+'SUCCEEDED: '+ numRight
+			+'\nFAILED:    '+ (samples-numRight)
 			+'\nTOTAL:     ' +samples
 			+'\n=========\n'
 			+'PRECISION: ' + String(100*(numRight/samples)) + '%');
